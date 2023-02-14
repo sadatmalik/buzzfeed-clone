@@ -26,9 +26,9 @@ const questions = [
             },
             {
                 text: "New Orleans",
-                image: "https://images.unsplash.com/photo-1659316331636-e76a236f8fe0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=988&q=80",
-                alt: "New Orleans downtown crowded street",
-                credit: "Aric Cheng"
+                image: "https://images.unsplash.com/photo-1661735365500-aed60aeff97d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2231&q=80",
+                alt: "New Orleans steamboat",
+                credit: "Yuhan Du"
             }
         ]
     },
@@ -99,8 +99,44 @@ const populateQuestions = () => {
         const titleBlock = document.createElement('div')
         titleBlock.id = question.id
         titleBlock.classList.add('title-block')
-
+        const titleHeading = document.createElement('h2')
+        titleHeading.textContent = question.text
+        titleBlock.append(titleHeading)
         questionDisplay.append(titleBlock)
+
+        const answersBlock = document.createElement('div')
+        answersBlock.id = question.id + "-questions"
+        answersBlock.classList.add('answer-options')
+
+        question.answers.forEach(answer => {
+            const answerBlock = document.createElement('div')
+            answerBlock.classList.add('answer-block')
+            answerBlock.addEventListener('click', () => handleClick)
+            const answerImage = document.createElement('img')
+            answerImage.setAttribute('src', answer.image)
+            answerImage.setAttribute('alt', answer.alt)
+
+            const answerTitle = document.createElement('h3')
+            answerTitle.textContent = answer.text
+
+            const answerInfo = document.createElement('p')
+            const imageLink = document.createElement('a')
+            imageLink.setAttribute('href', answer.credit)
+            imageLink.textContent = answer.credit
+
+            const sourceLink = document.createElement('a')
+            sourceLink.textContent = 'Unsplash'
+            sourceLink.setAttribute('src', 'https://www.unsplash.com')
+            answerInfo.append(imageLink, ' to ', sourceLink)
+
+            answerBlock.append(answerImage, answerTitle, answerInfo)
+            answersBlock.append(answerBlock)
+        })
+        questionDisplay.append(answersBlock)
     })
 }
 populateQuestions()
+
+const handleClick = () => {
+    console.log('clicked')
+}
