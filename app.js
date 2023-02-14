@@ -93,3 +93,14 @@ const questions = [
         ]
     }
 ]
+
+const populateQuestions = () => {
+    questions.forEach(question => {
+        const titleBlock = document.createElement('div')
+        titleBlock.id = question.id
+        titleBlock.classList.add('title-block')
+
+        questionDisplay.append(titleBlock)
+    })
+}
+populateQuestions()
