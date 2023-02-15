@@ -99,9 +99,11 @@ const populateQuestions = () => {
         const titleBlock = document.createElement('div')
         titleBlock.id = question.id
         titleBlock.classList.add('title-block')
+
         const titleHeading = document.createElement('h2')
         titleHeading.textContent = question.text
         titleBlock.append(titleHeading)
+
         questionDisplay.append(titleBlock)
 
         const answersBlock = document.createElement('div')
@@ -112,6 +114,7 @@ const populateQuestions = () => {
             const answerBlock = document.createElement('div')
             answerBlock.classList.add('answer-block')
             answerBlock.addEventListener('click', () => handleClick)
+
             const answerImage = document.createElement('img')
             answerImage.setAttribute('src', answer.image)
             answerImage.setAttribute('alt', answer.alt)
@@ -126,7 +129,7 @@ const populateQuestions = () => {
 
             const sourceLink = document.createElement('a')
             sourceLink.textContent = 'Unsplash'
-            sourceLink.setAttribute('src', 'https://www.unsplash.com')
+            sourceLink.setAttribute('href', 'https://www.unsplash.com')
             answerInfo.append(imageLink, ' to ', sourceLink)
 
             answerBlock.append(answerImage, answerTitle, answerInfo)
