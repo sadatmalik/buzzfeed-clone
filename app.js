@@ -94,6 +94,37 @@ const questions = [
     }
 ]
 
+const answers = [
+    {
+        combination: ["New York", "Pizza", "Traditional"],
+        text: "Blue Cheese",
+        image: "https://images.unsplash.com/photo-1626957341926-98752fc2ba90?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
+        alt: "Blue cheese"
+    },
+    {
+        combination: ["Austin", "Pasta", "Modern"],
+        text: "Cheddar",
+        image: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1746&q=80",
+        alt: "Cheddar cheese"
+    },
+    {
+        combination: ["Portland", "Sandwich", "Mountains"],
+        text: "Feta",
+        image: "",
+        alt: "Feta cheese"
+    },
+    {
+        combination: ["New Orleans", "Hamburger", "House"],
+        text: "Halloumi",
+        image: "",
+        alt: "Halloumi cheese"
+    }
+]
+// need to have a default answer to compensate for lack of combination data
+
+const unansweredQuestions = []
+const chosenAnswers = []
+
 const populateQuestions = () => {
     questions.forEach(question => {
         const titleBlock = document.createElement('div')
@@ -110,10 +141,12 @@ const populateQuestions = () => {
         answersBlock.id = question.id + "-questions"
         answersBlock.classList.add('answer-options')
 
+        unansweredQuestions.push(question.id)
+
         question.answers.forEach(answer => {
             const answerBlock = document.createElement('div')
             answerBlock.classList.add('answer-block')
-            answerBlock.addEventListener('click', () => handleClick)
+            answerBlock.addEventListener('click', () => handleClick(question.id, answer.text))
 
             const answerImage = document.createElement('img')
             answerImage.setAttribute('src', answer.image)
@@ -124,7 +157,7 @@ const populateQuestions = () => {
 
             const answerInfo = document.createElement('p')
             const imageLink = document.createElement('a')
-            imageLink.setAttribute('href', answer.credit)
+            imageLink.setAttribute('href', answer.image)
             imageLink.textContent = answer.credit
 
             const sourceLink = document.createElement('a')
@@ -140,6 +173,65 @@ const populateQuestions = () => {
 }
 populateQuestions()
 
-const handleClick = () => {
-    console.log('clicked')
+const handleClick = (questionId, chosenAnswer) => {
+    if (unansweredQuestions.includes(questionId))
+    chosenAnswers.push(chosenAnswer)
+    const itemToRemove = unansweredQuestions.indexOf(questionId)
+
+    if (itemToRemove > -1) {
+        unansweredQuestions.splice(itemToRemove, 1)
+    }
+    console.log(chosenAnswer)
+    console.log(unansweredQuestions)
+
+    disableQuestionBlock(questionId, chosenAnswer)
+    const lowestQuestionId = Math.min(...unansweredQuestions)
+    location.href = '#' + lowestQuestionId
+
+    if (!unansweredQuestions.length) {
+        // scroll to answer div
+        location.href = '#answer'
+        showAnswer()
+    }
+}
+
+const showAnswer = () => {
+    let result
+    answers.forEach(answer => {
+        if (
+            chosenAnswers.includes(answer.combination[0]) +
+            chosenAnswers.includes(answer.combination[1]) +
+            chosenAnswers.includes(answer.combination[2])
+        ) {
+            result = answer
+        } else if (!result) {
+            // first answer object is default
+            result = answers[0]
+        }
+    })
+
+    console.log(result)
+
+    const answerBlock = document.createElement('div')
+    answerBlock.classList.add('result-block')
+    const answerTitle = document.createElement('h3')
+    answerTitle.textContent = result.text
+    const answerImage = document.createElement('img')
+    answerImage.setAttribute('src', result.image)
+    answerImage.setAttribute('alt', result.alt)
+
+    answerBlock.append(answerTitle, answerImage)
+    answerDisplay.append(answerBlock)
+
+    const allAnswerBlocks = document.querySelectorAll('.answer-block')
+    Array.from(allAnswerBlocks).forEach(answerBlock => answerBlock.replaceWith(answerBlock.cloneNode(true)))
+}
+
+const disableQuestionBlock = (questionId, chosenAnswer) => {
+    const currentQuestionBlock = document.getElementById(questionId + "-questions")
+    Array.from(currentQuestionBlock.children).forEach(block => {
+        if (block.children.item(1).innerText !== chosenAnswer) {
+            block.style.opacity = "50%"
+        }
+    })
 }
